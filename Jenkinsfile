@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/Bodigestanley/devops-cicd-project.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t devops-app .'
