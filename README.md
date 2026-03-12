@@ -1,40 +1,38 @@
-# 🚀 DevOps CI/CD Pipeline Project
+# 🚀 Kubernetes Microservices Deployment Project
 
 ![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-blue)
-![Jenkins](https://img.shields.io/badge/Jenkins-CI/CD-red)
+![Minikube](https://img.shields.io/badge/Minikube-LocalCluster-yellowgreen)
 ![Python](https://img.shields.io/badge/Python-Flask-green)
 ![DevOps](https://img.shields.io/badge/DevOps-Automation-orange)
 
-This project demonstrates a **complete DevOps CI/CD pipeline** that automates application build and deployment using modern DevOps tools.
+This project demonstrates a **complete Kubernetes microservices architecture** that deploys multiple containerized Flask applications and orchestrates them using **Kubernetes (Minikube)**.
 
-The pipeline builds a **Flask web application**, containerizes it using **Docker**, and deploys it to **Kubernetes (Minikube)**.
+The architecture consists of **4 microservices**:
+
+* **Auth Service** – Handles authentication
+* **Product Service** – Manages products
+* **Order Service** – Handles orders
+* **Frontend Service** – Provides the UI
 
 ---
 
-# 📌 DevOps Architecture
+# 📌 Microservices Architecture
 
 ```
-Developer
-   │
-   ▼
-GitHub Repository
-   │
-   ▼
-Jenkins CI/CD Pipeline
-   │
-   ▼
-Docker Build
-   │
-   ▼
-Docker Container
-   │
-   ▼
-Kubernetes Cluster (Minikube)
-   │
-   ▼
-Flask Application
+           User
+            │
+            ▼
+     Frontend Service
+      ┌─────┴─────┐
+      │           │
+  Auth Service  Product Service
+                  │
+                  ▼
+              Order Service
 ```
+
+![Architecture Diagram](./screenshots/architecture.png)
 
 ---
 
@@ -42,7 +40,6 @@ Flask Application
 
 * Python (Flask)
 * Docker
-* Jenkins
 * Kubernetes (Minikube)
 * Git & GitHub
 
@@ -51,13 +48,32 @@ Flask Application
 # 📂 Project Structure
 
 ```
-devops-cicd-project
+kubernetes-microservices-project
 │
-├── app.py
-├── Dockerfile
-├── Jenkinsfile
-├── deployment.yaml
-├── service.yaml
+├── auth-service/
+│   ├── app.py
+│   └── Dockerfile
+├── product-service/
+│   ├── app.py
+│   └── Dockerfile
+├── order-service/
+│   ├── app.py
+│   └── Dockerfile
+├── frontend/
+│   ├── app.py
+│   └── Dockerfile
+├── kubernetes/
+│   ├── auth-deployment.yaml
+│   ├── product-deployment.yaml
+│   ├── order-deployment.yaml
+│   ├── frontend-deployment.yaml
+│   └── ingress.yaml
+├── screenshots/
+│   ├── architecture.png
+│   ├── auth-service.png
+│   ├── product-service.png
+│   ├── order-service.png
+│   └── frontend-service.png
 └── README.md
 ```
 
@@ -68,114 +84,87 @@ devops-cicd-project
 ## 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/Bodigestanley/devops-cicd-project.git
-cd devops-cicd-project
+git clone https://github.com/Bodigestanley/kubernetes-microservices-deployment.git
+cd kubernetes-microservices-deployment
 ```
 
 ---
 
-# 🐳 Build Docker Image
+# 🐳 Build Docker Images
 
 ```bash
-docker build -t flask-devops-app .
+docker build -t auth-service ./auth-service
+docker build -t product-service ./product-service
+docker build -t order-service ./order-service
+docker build -t frontend-service ./frontend
 ```
 
 ---
 
-# ▶ Run Docker Container
+# ▶ Load Images into Minikube
 
 ```bash
-docker run -p 5000:5000 flask-devops-app
-```
-
-Open in browser
-
-```
-http://localhost:5000
+minikube image load auth-service:latest
+minikube image load product-service:latest
+minikube image load order-service:latest
+minikube image load frontend-service:latest
 ```
 
 ---
 
 # ☸ Kubernetes Deployment
 
-Start Minikube
+Start Minikube:
 
 ```bash
 minikube start
 ```
 
-Deploy application
+Deploy services:
 
 ```bash
-kubectl apply -f deployment.yaml
+kubectl apply -f kubernetes/
 ```
 
-Create service
-
-```bash
-kubectl apply -f service.yaml
-```
-
-Check running pods
+Check running pods:
 
 ```bash
 kubectl get pods
 ```
 
-Check services
+Check services:
 
 ```bash
 kubectl get services
 ```
 
-Open application
+Open Frontend service:
 
 ```bash
-minikube service flask-service
+minikube service frontend-service
 ```
 
 ---
 
-# 🔄 Jenkins CI/CD Pipeline
+# 🔄 Microservices Overview
 
-The Jenkins pipeline performs the following stages:
-
-1. Clone repository from GitHub
-2. Build Docker image
-3. Run Docker container
-4. Deploy application to Kubernetes
-
-Pipeline configuration is defined in the **Jenkinsfile**.
+Each microservice runs as a separate containerized Flask application managed by Kubernetes. Deployments ensure replication, and services provide network access. Ingress routes requests to the correct service.
 
 ---
 
 # 📸 Project Screenshots
 
-(Add screenshots here)
-
-Example:
-
-```
-docs/
-   ├── jenkins-pipeline.png
-   ├── docker-container.png
-   └── kubernetes-pods.png
-```
-
-Then display them in README:
-
-```
-![Jenkins Pipeline](docs/jenkins-pipeline.png)
-![Docker Container](docs/docker-container.png)
-![Kubernetes Pods](docs/kubernetes-pods.png)
-```
+![Auth Service](./screenshots/auth-service.png)
+![Product Service](./screenshots/product-service.png)
+![Order Service](./screenshots/order-service.png)
+![Frontend Service](./screenshots/frontend-service.png)
 
 ---
 
 # 🚀 Future Improvements
 
 * Push Docker images to Docker Hub
-* Deploy application on AWS EC2
+* Deploy services on AWS EC2
 * Use Amazon EKS for Kubernetes cluster
 * Add monitoring with Prometheus & Grafana
 
@@ -188,4 +177,4 @@ Stanley Bodige
 DevOps | Cloud | Cybersecurity Enthusiast
 
 GitHub:
-https://github.com/Bodigestanley
+[https://github.com/Bodigestanley](https://github.com/Bodigestanley)
